@@ -2,9 +2,13 @@ import os
 import io
 import textwrap
 import warnings
+from sre_parse import parse
+
 from flask import Flask,jsonify,request
 from PyPDF2 import PdfReader
 from pathlib import Path
+
+from flask_cors import CORS
 from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain.retrievers import ContextualCompressionRetriever
@@ -24,6 +28,7 @@ from datetime import datetime
 import argparse
 
 app=Flask(__name__)
+CORS(app)
 warnings.filterwarnings("ignore")
 load_dotenv()
 os.environ['GROQ_API_KEY']=os.getenv("GROQ_API_KEY")
@@ -44,35 +49,30 @@ def answer_question(qa,query):
 
 
 @app.route("/fetch",methods=['POST'])
-async def fetch_result():
+def fetch_result():
 #     parser=LlamaParse(
 #     api_key=os.environ['LLAMA_API_KEY'],
 #     result_type="markdown",
 #     max_timeout=5000,
 # ) 
-
+    print(f"Request: {request.files}")
     if 'file' not in request.files:
         return jsonify({"error":"No file found!"}),400
     pdf_file=request.files['file']
-    
-    if not pdf_file.endswith(".pdf"):
-        return jsonify({"error":"File format not supported"}),400
-    pdf_buffer=io.BytesIO(pdf_file.read())
+    print(type(pdf_file))
 
-    reader=PdfReader(pdf_buffer)    
-    # parsed_document=await parser.aload_data(doc)
-    text_loader = TextLoader()
-    parsed_document = text_loader.load()
-
-    parsed_doc=parsed_document[0]
+    parsed_doc = pdf_file.read()
     now=datetime.now()
-    parsed_doc.page_content+= f"Current date is {now.strftime('%Y-%m-%d')}, Current day is {now.strftime('%A')}"
-    print(parsed_doc.page_content)
+    # parsed_doc += f"Current date is {now.strftime('%Y-%m-%d')}, Current day is {now.strftime('%A')}"
+    date_string = f"Current date is {now.strftime('%Y-%m-%d')}, Current day is {now.strftime('%A')}"
+    date_string_bytes = date_string.encode('utf-8')
+    parsed_doc += date_string_bytes
+    print(parsed_doc)
 
     doc_path=Path('data/parsed_doc.md')
     doc_path.parent.mkdir(parents=True, exist_ok=True)
-    with doc_path.open("w") as f:
-        f.write(parsed_doc.page_content)
+    with doc_path.open("wb") as f:
+        f.write(parsed_doc)
     
     loader=UnstructuredMarkdownLoader(doc_path)
     loaded_doc=loader.load()
@@ -110,6 +110,8 @@ async def fetch_result():
     match = re.search(r'({.*?})', ans, re.DOTALL)
     if match:
         json_part = match.group(1)
+    else:
+        json_part = {}
 
     return jsonify(json_part),200
 

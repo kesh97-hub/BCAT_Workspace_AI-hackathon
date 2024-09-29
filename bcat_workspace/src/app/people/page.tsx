@@ -1,6 +1,7 @@
 "use client"
 
 import { Box, Button, FormControl, InputLabel, List, MenuItem, OutlinedInput, Select, SelectChangeEvent, Typography } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Link from "next/link";
 import PeopleCard from "@/components/PeopleCard";
@@ -104,11 +105,11 @@ export default function People() {
     return (
         <div className="mx-48 my-2">
             <div className="flex items-center">
-                <Button variant="outlined" size="small" sx={{ p:0, m: 1, width: 0, height: 1 }} >
+                <IconButton sx={{ m: 2}} >
                     <Link href={"/"}>
-                        <ArrowBackIcon/>
+                        <ArrowBackIcon sx={{color: "#65558F"}}/>
                     </Link>
-                </Button>
+                </IconButton>
                 <Box sx={{ py: 2 }}>
                     <Typography variant="h3">People</Typography>
                     <Typography variant="body1">Find people in your organization.</Typography>

@@ -14,9 +14,29 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { Link as LinkType } from '@/app/people/page';
+import Link from '@mui/material/Link';
+import { SiGmail, SiGooglechat, SiGooglemeet } from 'react-icons/si';
+import { Badge } from '@mui/material';
 
 // const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Logout'];
+// const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+const links: LinkType[] = [
+    {
+        "LinkName": "Google Mail",
+        "LinkURL": "/link/to/GoogleMail"
+    },
+    {
+        "LinkName": "Google Meet",
+        "LinkURL": "/link/to/GoogleMeet"
+    },
+    {
+        "LinkName": "Google Chat",
+        "LinkURL": "/link/to/GoogleChat"
+    },
+]
 
 function ResponsiveAppBar() {
 //   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -41,8 +61,18 @@ function ResponsiveAppBar() {
     <AppBar position="static" sx={{ bgcolor: '#FDF7FF'}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between'}}>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: 'black'}} />
-          <Box sx={{ flexGrow: 0, ml: 1 }}>
+          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: 'black'}} /> */}
+          <Typography variant="h4" fontWeight={700} color='black'>BCAT</Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, flexGrow: 0, m: 1 }}>
+            <Box sx={{display: 'flex', flexDirection: "row", gap: 2}}>
+                {links.map((link, index) => (
+                    <Box key={index} sx={{margin: 1}}>
+                        {link.LinkName === "Google Mail" && <Link href={link.LinkURL}><Badge badgeContent={4} color="primary"><SiGmail color="#D93025" size={24}/></Badge></Link>}
+                        {link.LinkName === "Google Meet" && <Link href={link.LinkURL}><Badge variant='dot' color="primary"><SiGooglemeet color="#00897B" size={24}/></Badge></Link>}
+                        {link.LinkName === "Google Chat" && <Link href={link.LinkURL}><Badge badgeContent={2} color="primary"><SiGooglechat color="#FF0000" size={24}/></Badge></Link>}
+                    </Box>
+                ))}
+            </Box>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />

@@ -22,10 +22,10 @@ export default function MessageCard( {message} : MessageCardProps) {
         },
       }}
     >
-      <Paper elevation={3} sx={{ display: 'grid', gridTemplateRows: 'auto 1fr auto', p: 2}}>
-        <Typography variant='h3' sx={{ textWrap: 'wrap'}}>{message.Title}</Typography>
-        <Typography variant='body1' sx={{ textWrap: 'wrap'}}>{message.Message}</Typography>
-        <Link href={message.Link} underline="hover" sx={{ display: 'flex', justifySelf: 'end',  alignSelf: 'end', alignItems: 'center'}}>
+      <Paper elevation={3} sx={{ display: 'grid', gridTemplateRows: 'auto 1fr auto', p: 2, gap: 2, overflow: 'auto', bgcolor:"#ECE6F0"}}>
+        <Typography variant='h1' fontSize={16} fontWeight={700} sx={{ textWrap: 'wrap'}}>{message.Title}</Typography>
+        <Typography variant='body1' fontSize={12} sx={{ textWrap: 'wrap'}}>{message.Message}</Typography>
+        <Link href={message.Link} underline="hover" sx={{ display: 'flex', justifySelf: 'end',  alignSelf: 'end', alignItems: 'center', color:"black"}}>
             <Typography variant='body2'>Read More</Typography>
             <NavigateNextIcon >Read More</NavigateNextIcon>
         </Link>
